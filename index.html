@@ -6,109 +6,156 @@
 <title>华文写作批改工具</title>
 <style>
 :root {
-  --teal: #0F6E56;
-  --teal-light: #e6f4f1;
-  --gold: #B8860B;
-  --gold-light: #fef7e0;
-  --purple: #534AB7;
-  --purple-light: #EEEDFE;
-  --bg: #f8f7f4;
-  --card: #ffffff;
-  --text: #1a1a1a;
-  --muted: #888;
-  --border: #e8e4dd;
-  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --teal:#0F6E56; --teal-light:#e6f4f1; --teal-dark:#0a5240;
+  --gold:#B8860B; --gold-light:#fef7e0;
+  --purple:#534AB7; --purple-light:#EEEDFE;
+  --red:#c0392b; --red-light:#fff0f0;
+  --green:#27ae60; --green-light:#eef8f2;
+  --blue:#2980b9; --blue-light:#edf4fa;
+  --bg:#f8f7f4; --card:#fff; --text:#1a1a1a; --muted:#888; --border:#e8e4dd;
+  --shadow:0 4px 20px rgba(0,0,0,.08);
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-.wrapper { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
-.header { text-align: center; margin-bottom: 2.5rem; }
-.header h1 { font-size: 1.9rem; font-weight: 700; color: var(--teal); letter-spacing: 0.04em; margin-bottom: 0.4rem; }
-.header p { color: var(--muted); font-size: 0.93rem; }
-.mode-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-.mode-tab {
-  flex: 1; min-width: 140px; padding: 0.85rem 1rem;
-  border: 2px solid var(--border); border-radius: 12px; background: var(--card);
-  cursor: pointer; font-size: 0.9rem; font-family: inherit; text-align: center;
-  transition: all 0.2s; color: var(--muted);
-}
-.mode-tab:hover { border-color: #bbb; color: var(--text); }
-.mode-tab.active-teal   { border-color: var(--teal);   background: var(--teal-light);   color: var(--teal);   font-weight: 600; }
-.mode-tab.active-gold   { border-color: var(--gold);   background: var(--gold-light);   color: var(--gold);   font-weight: 600; }
-.mode-tab.active-purple { border-color: var(--purple); background: var(--purple-light); color: var(--purple); font-weight: 600; }
-.mode-tab .tab-icon { font-size: 1.3rem; display: block; margin-bottom: 0.25rem; }
-.mode-tab .tab-desc { font-size: 0.76rem; margin-top: 0.2rem; opacity: 0.8; }
-.sample-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.sample-label { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
-.sample-btn {
-  padding: 0.3rem 0.75rem; font-size: 0.8rem; border: 1.5px solid var(--border);
-  border-radius: 20px; background: var(--card); cursor: pointer; font-family: inherit;
-  color: var(--text); transition: all 0.2s;
-}
-.sample-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
-.input-section { margin-bottom: 1rem; }
-.input-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; }
-textarea {
-  width: 100%; min-height: 180px; padding: 1rem; font-family: inherit; font-size: 1rem;
-  line-height: 1.8; border: 2px solid var(--border); border-radius: 12px; background: var(--card);
-  resize: vertical; transition: border-color 0.2s; color: var(--text);
-}
-textarea:focus { outline: none; border-color: var(--teal); }
-.submit-row { display: flex; gap: 0.7rem; margin-bottom: 1.2rem; }
-.submit-btn {
-  flex: 1; padding: 0.9rem; background: var(--teal); color: #fff; border: none;
-  border-radius: 12px; font-size: 1rem; font-weight: 600; font-family: inherit;
-  cursor: pointer; transition: background 0.2s, transform 0.1s;
-}
-.submit-btn:hover { background: #0a5240; }
-.submit-btn:active { transform: scale(0.98); }
-.submit-btn:disabled { background: #aaa; cursor: not-allowed; }
-.clear-btn {
-  padding: 0.9rem 1.4rem; border: 2px solid var(--border); border-radius: 12px;
-  background: var(--card); color: var(--muted); font-size: 0.9rem; font-family: inherit;
-  cursor: pointer; transition: all 0.2s;
-}
-.clear-btn:hover { border-color: #bbb; color: var(--text); }
-.error-msg {
-  display: none; padding: 0.75rem 1rem; background: #fff0f0;
-  border: 1.5px solid #f5c6c6; border-radius: 10px; color: #c0392b;
-  font-size: 0.88rem; margin-bottom: 1rem;
-}
-.loading { display: none; text-align: center; padding: 2rem; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 1.5rem; }
-.loading.visible { display: block; }
-.brush-anim { font-size: 2.5rem; animation: bounce 1s infinite alternate; }
-@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
-.loading-text { margin-top: 0.8rem; color: var(--muted); font-size: 0.9rem; }
-.result-section { display: none; background: var(--card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; margin-top: 0.5rem; }
-.result-section.visible { display: block; }
-.result-header { display: flex; align-items: center; padding: 1rem 1.3rem; border-bottom: 1px solid var(--border); gap: 0.7rem; }
-.mode-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600; }
-.badge-teal   { background: var(--teal-light);   color: var(--teal);   }
-.badge-gold   { background: var(--gold-light);   color: var(--gold);   }
-.badge-purple { background: var(--purple-light); color: var(--purple); }
-.result-content { padding: 1.3rem 1.5rem; font-size: 0.97rem; line-height: 1.9; }
-.result-content h3 { color: var(--teal); margin: 1.1rem 0 0.4rem; font-size: 0.95rem; }
-.result-content strong { color: #333; }
-.error-highlight { background: #fff0f0; color: #c0392b; border-radius: 3px; padding: 0 2px; }
-.suggestion { color: var(--teal); margin: 0.25rem 0; }
-.praise { color: #27ae60; margin: 0.25rem 0; }
-.score-row { display: flex; gap: 1rem; padding: 1rem 1.5rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
-.score-chip { flex: 1; min-width: 90px; text-align: center; padding: 0.6rem; background: var(--bg); border-radius: 10px; }
-.score-label { font-size: 0.76rem; color: var(--muted); }
-.score-val { font-size: 1.5rem; font-weight: 700; color: var(--teal); }
-.action-row { display: flex; gap: 0.6rem; padding: 0.9rem 1.3rem; border-top: 1px solid var(--border); flex-wrap: wrap; }
-.action-pill {
-  padding: 0.4rem 0.9rem; border: 1.5px solid var(--border); border-radius: 20px;
-  background: transparent; font-size: 0.82rem; font-family: inherit; cursor: pointer;
-  color: var(--text); transition: all 0.2s;
-}
-.action-pill:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
-.footer { text-align: center; margin-top: 3rem; color: var(--muted); font-size: 0.8rem; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.wrapper{max-width:800px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+
+.header{text-align:center;margin-bottom:2rem;}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--teal);letter-spacing:.04em;margin-bottom:.3rem;}
+.header p{color:var(--muted);font-size:.9rem;}
+
+/* Student bar */
+.student-bar{display:flex;gap:.8rem;align-items:center;margin-bottom:1.5rem;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:.9rem 1.2rem;}
+.student-bar label{font-size:.85rem;color:var(--muted);white-space:nowrap;}
+.student-input{flex:1;border:none;outline:none;font-family:inherit;font-size:.95rem;background:transparent;color:var(--text);}
+.student-input::placeholder{color:#bbb;}
+
+/* Mode tabs */
+.mode-tabs{display:flex;gap:.6rem;margin-bottom:1.4rem;flex-wrap:wrap;}
+.mode-tab{flex:1;min-width:130px;padding:.8rem .9rem;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;font-size:.88rem;font-family:inherit;text-align:center;transition:all .2s;color:var(--muted);}
+.mode-tab .tab-icon{font-size:1.3rem;display:block;margin-bottom:.2rem;}
+.mode-tab .tab-desc{font-size:.74rem;margin-top:.15rem;opacity:.8;}
+.mode-tab.active-teal  {border-color:var(--teal);  background:var(--teal-light);  color:var(--teal);  font-weight:600;}
+.mode-tab.active-gold  {border-color:var(--gold);  background:var(--gold-light);  color:var(--gold);  font-weight:600;}
+.mode-tab.active-purple{border-color:var(--purple);background:var(--purple-light);color:var(--purple);font-weight:600;}
+
+/* Samples */
+.sample-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem;flex-wrap:wrap;}
+.sample-label{font-size:.82rem;color:var(--muted);white-space:nowrap;}
+.sample-btn{padding:.3rem .75rem;font-size:.79rem;border:1.5px solid var(--border);border-radius:20px;background:var(--card);cursor:pointer;font-family:inherit;color:var(--text);transition:all .2s;}
+.sample-btn:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-light);}
+
+/* Input */
+.input-wrap{position:relative;margin-bottom:1rem;}
+.input-label{display:flex;justify-content:space-between;align-items:center;font-size:.84rem;color:var(--muted);margin-bottom:.4rem;}
+textarea{width:100%;min-height:180px;padding:1rem 1rem 3.2rem 1rem;font-family:inherit;font-size:1rem;line-height:1.85;border:2px solid var(--border);border-radius:12px;background:var(--card);resize:vertical;transition:border-color .2s;color:var(--text);}
+textarea:focus{outline:none;border-color:var(--teal);}
+.camera-btn{position:absolute;bottom:.7rem;right:.7rem;display:flex;align-items:center;gap:.4rem;padding:.45rem .9rem;background:var(--teal);color:#fff;border:none;border-radius:20px;font-size:.8rem;font-family:inherit;cursor:pointer;transition:background .2s;}
+.camera-btn:hover{background:var(--teal-dark);}
+
+/* Buttons */
+.submit-row{display:flex;gap:.7rem;margin-bottom:1.2rem;}
+.submit-btn{flex:1;padding:.9rem;background:var(--teal);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background .2s,transform .1s;}
+.submit-btn:hover{background:var(--teal-dark);}
+.submit-btn:active{transform:scale(.98);}
+.submit-btn:disabled{background:#aaa;cursor:not-allowed;}
+.clear-btn{padding:.9rem 1.3rem;border:2px solid var(--border);border-radius:12px;background:var(--card);color:var(--muted);font-size:.9rem;font-family:inherit;cursor:pointer;transition:all .2s;}
+.clear-btn:hover{border-color:#bbb;color:var(--text);}
+
+/* Error / loading / result */
+.error-msg{display:none;padding:.75rem 1rem;background:var(--red-light);border:1.5px solid #f5c6c6;border-radius:10px;color:var(--red);font-size:.88rem;margin-bottom:1rem;}
+.loading{display:none;text-align:center;padding:2rem;background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin-bottom:1.5rem;}
+.loading.visible{display:block;}
+.brush-anim{font-size:2.5rem;animation:bounce 1s infinite alternate;}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+.loading-text{margin-top:.8rem;color:var(--muted);font-size:.9rem;}
+.result-section{display:none;background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;}
+.result-section.visible{display:block;}
+.result-header{display:flex;align-items:center;padding:1rem 1.3rem;border-bottom:1px solid var(--border);gap:.7rem;}
+.mode-badge{display:inline-block;padding:.3rem .8rem;border-radius:20px;font-size:.82rem;font-weight:600;}
+.badge-teal  {background:var(--teal-light);  color:var(--teal);}
+.badge-gold  {background:var(--gold-light);  color:var(--gold);}
+.badge-purple{background:var(--purple-light);color:var(--purple);}
+.result-content{padding:1.3rem 1.5rem;font-size:.97rem;line-height:1.9;}
+.result-content h3{color:var(--teal);margin:1.1rem 0 .4rem;font-size:.95rem;}
+.result-content strong{color:#333;}
+.error-highlight{background:var(--red-light);color:var(--red);border-radius:3px;padding:0 2px;}
+.suggestion{color:var(--teal);margin:.2rem 0;}
+.praise{color:var(--green);margin:.2rem 0;}
+.score-row{display:flex;gap:.8rem;padding:1rem 1.5rem;border-top:1px solid var(--border);flex-wrap:wrap;}
+.score-chip{flex:1;min-width:85px;text-align:center;padding:.6rem;background:var(--bg);border-radius:10px;}
+.score-label{font-size:.75rem;color:var(--muted);}
+.score-val{font-size:1.5rem;font-weight:700;color:var(--teal);}
+.action-row{display:flex;gap:.6rem;padding:.9rem 1.3rem;border-top:1px solid var(--border);flex-wrap:wrap;}
+.action-pill{padding:.4rem .9rem;border:1.5px solid var(--border);border-radius:20px;background:transparent;font-size:.82rem;font-family:inherit;cursor:pointer;color:var(--text);transition:all .2s;}
+.action-pill:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-light);}
+.action-pill.green{border-color:var(--green);color:var(--green);}
+.action-pill.green:hover{background:var(--green-light);}
+
+/* Teacher annotations */
+.teacher-section{display:none;margin-top:1rem;background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;}
+.teacher-section.visible{display:block;}
+.teacher-header{background:var(--gold-light);padding:1rem 1.3rem;border-bottom:1px solid #f0d060;display:flex;align-items:center;gap:.6rem;}
+.teacher-header span:first-child{font-size:1.1rem;}
+.teacher-header strong{color:var(--gold);font-size:.95rem;}
+.teacher-body{padding:1.2rem 1.5rem;}
+.anno-item{background:var(--bg);border-radius:10px;padding:.75rem 1rem;margin-bottom:.6rem;border-left:3px solid var(--border);font-size:.9rem;line-height:1.7;}
+.anno-tag{display:inline-block;padding:.1rem .55rem;border-radius:8px;font-size:.74rem;font-weight:600;margin-bottom:.3rem;}
+.tag-语用{background:var(--purple-light);color:var(--purple);border-left-color:var(--purple);}
+.tag-逻辑{background:var(--gold-light);color:var(--gold);}
+.tag-文化{background:var(--red-light);color:var(--red);}
+.tag-鼓励{background:var(--green-light);color:var(--green);}
+.tag-其他{background:var(--blue-light);color:var(--blue);}
+
+/* Draft 2 */
+.draft2-section{display:none;margin-top:1.5rem;}
+.draft2-section.visible{display:block;}
+.draft2-header{display:flex;align-items:center;gap:.7rem;padding:1rem 1.3rem;background:var(--green-light);border:1.5px solid #b5e2c8;border-radius:12px 12px 0 0;}
+.draft2-header span{font-weight:600;color:var(--green);font-size:.95rem;}
+.draft2-body{background:var(--card);border:1.5px solid #b5e2c8;border-top:none;border-radius:0 0 12px 12px;padding:1.2rem;}
+.draft2-body textarea{min-height:150px;border-color:#b5e2c8;margin-bottom:.8rem;padding:1rem;}
+.draft2-body textarea:focus{border-color:var(--green);}
+.draft2-submit{width:100%;padding:.85rem;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:600;font-family:inherit;cursor:pointer;}
+.draft2-submit:hover{background:#1e8449;}
+.draft2-submit:disabled{background:#aaa;}
+
+/* Score comparison */
+.comparison{display:none;margin-top:1.2rem;}
+.comparison.visible{display:block;}
+.comp-box{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:1.3rem 1.5rem;}
+.comp-title{font-size:.9rem;font-weight:600;margin-bottom:1rem;text-align:center;}
+.comp-row{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;font-size:.85rem;}
+.comp-label{width:50px;text-align:right;color:var(--muted);font-size:.8rem;}
+.comp-bars{flex:1;display:flex;flex-direction:column;gap:.25rem;}
+.bar-wrap{display:flex;align-items:center;gap:.4rem;}
+.bar-tag{width:22px;font-size:.7rem;color:var(--muted);}
+.bar-bg{flex:1;height:9px;background:#f0ece6;border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width .8s ease;}
+.b1{background:#94c4ba;}.b2{background:var(--teal);}
+.bar-num{width:28px;font-size:.8rem;color:var(--teal);font-weight:600;}
+.comp-delta{padding:.15rem .55rem;border-radius:10px;font-size:.8rem;}
+.delta-up{background:#d4edda;color:#155724;}
+.delta-same{background:#f0ece6;color:var(--muted);}
+.delta-down{background:var(--red-light);color:var(--red);}
+.comp-summary{text-align:center;margin-top:.8rem;font-size:.88rem;padding:.7rem;background:var(--teal-light);border-radius:10px;color:var(--teal);font-weight:500;}
+
+/* Camera modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.visible{display:flex;}
+.modal-box{background:var(--card);border-radius:20px;padding:1.5rem;width:min(90vw,500px);}
+.modal-title{font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);}
+#cameraVideo{width:100%;border-radius:12px;background:#000;display:block;}
+#cameraPreview{display:none;width:100%;border-radius:12px;margin-top:.8rem;}
+.cam-btns{display:flex;gap:.7rem;margin-top:1rem;}
+.cam-btn{flex:1;padding:.75rem;border:none;border-radius:10px;font-family:inherit;font-size:.9rem;font-weight:600;cursor:pointer;}
+.cam-snap{background:var(--teal);color:#fff;}
+.cam-retake{background:var(--bg);color:var(--text);border:1.5px solid var(--border);}
+.cam-use{background:var(--green);color:#fff;}
+.cam-cancel{background:var(--bg);color:var(--muted);border:1.5px solid var(--border);}
+.cam-status{text-align:center;font-size:.84rem;color:var(--muted);margin-top:.6rem;}
+.cam-loading{text-align:center;padding:.8rem;color:var(--teal);font-size:.88rem;display:none;}
+
+.footer{text-align:center;margin-top:3rem;color:var(--muted);font-size:.78rem;}
 </style>
 </head>
 <body>
@@ -118,42 +165,40 @@ textarea:focus { outline: none; border-color: var(--teal); }
     <p>Chinese Writing Feedback Tool · 三种反馈模式 · 适合二语学习者</p>
   </div>
 
+  <div class="student-bar">
+    <label>👤</label>
+    <input class="student-input" id="studentName" type="text" placeholder="请输入姓名或学号（必填）" />
+  </div>
+
   <div class="mode-tabs">
     <button class="mode-tab active-teal" onclick="setMode('ai')" id="tab-ai">
-      <span class="tab-icon">🤖</span>AI 反馈
-      <div class="tab-desc">直接纠错，给出答案</div>
+      <span class="tab-icon">🤖</span>AI 反馈<div class="tab-desc">直接纠错，给出答案</div>
     </button>
     <button class="mode-tab" onclick="setMode('teacher')" id="tab-teacher">
-      <span class="tab-icon">👩‍🏫</span>教师反馈
-      <div class="tab-desc">启发引导，思考为主</div>
+      <span class="tab-icon">👩‍🏫</span>教师反馈<div class="tab-desc">启发引导，思考为主</div>
     </button>
     <button class="mode-tab" onclick="setMode('hybrid')" id="tab-hybrid">
-      <span class="tab-icon">🤝</span>人机协同
-      <div class="tab-desc">AI批改 + 教师建议</div>
+      <span class="tab-icon">🤝</span>人机协同<div class="tab-desc">AI批改 + 教师建议</div>
     </button>
   </div>
 
   <div class="sample-row">
-    <span class="sample-label">试试样本文章 →</span>
+    <span class="sample-label">试试样本 →</span>
     <button class="sample-btn" onclick="loadSample(0)">我的家庭（初级）</button>
     <button class="sample-btn" onclick="loadSample(1)">环境保护（中级）</button>
     <button class="sample-btn" onclick="loadSample(2)">城市生活（中高级）</button>
   </div>
 
-  <div class="input-section">
-    <div class="input-label">
-      <span>粘贴或输入华文作文</span>
-      <span id="charCount">0 字</span>
-    </div>
-    <textarea id="essayInput" placeholder="在此输入华文作文内容……&#10;&#10;例如：我很喜欢我的学校。我的学校有很多同学和老师。每天我都去学校学习中文。" oninput="updateCount()"></textarea>
+  <div class="input-wrap">
+    <div class="input-label"><span>粘贴或输入华文作文</span><span id="charCount">0 字</span></div>
+    <textarea id="essayInput" placeholder="在此输入华文作文……&#10;&#10;或点右下角「📷 扫描作文」拍照识别手写稿。" oninput="updateCount()"></textarea>
+    <button class="camera-btn" onclick="openCamera()">📷 扫描作文</button>
   </div>
 
   <div class="error-msg" id="errorMsg"></div>
 
   <div class="submit-row">
-    <button class="submit-btn" id="submitBtn" onclick="getFeedback()">
-      <span id="btnText">获取反馈</span>
-    </button>
+    <button class="submit-btn" id="submitBtn" onclick="getFeedback(1)"><span id="btnText">获取反馈</span></button>
     <button class="clear-btn" onclick="clearAll()">清除</button>
   </div>
 
@@ -162,6 +207,7 @@ textarea:focus { outline: none; border-color: var(--teal); }
     <div class="loading-text" id="loadingText">正在批改中，请稍候…</div>
   </div>
 
+  <!-- Draft 1 result -->
   <div class="result-section" id="resultSection">
     <div class="result-header">
       <span id="modeBadge" class="mode-badge badge-teal">🤖 AI 反馈</span>
@@ -170,144 +216,319 @@ textarea:focus { outline: none; border-color: var(--teal); }
     <div class="result-content" id="resultContent"></div>
     <div class="score-row" id="scoreRow"></div>
     <div class="action-row">
-      <button class="action-pill" onclick="copyResult()">📋 复制反馈</button>
-      <button class="action-pill" onclick="clearAll()">重新批改</button>
+      <button class="action-pill green" onclick="showDraft2()">📝 提交二稿</button>
+      <button class="action-pill" onclick="checkTeacherFeedback()">🔄 查看教师批注</button>
+      <button class="action-pill" onclick="copyResult('resultContent')">📋 复制</button>
+      <button class="action-pill" onclick="clearAll()">重新开始</button>
+    </div>
+  </div>
+
+  <!-- Teacher annotations -->
+  <div class="teacher-section" id="teacherSection">
+    <div class="teacher-header">
+      <span>👩‍🏫</span>
+      <strong>教师深层批注</strong>
+      <span style="font-size:.8rem;color:var(--gold);margin-left:.3rem;">老师已为你批改</span>
+    </div>
+    <div class="teacher-body" id="teacherBody"></div>
+  </div>
+
+  <!-- Draft 2 -->
+  <div class="draft2-section" id="draft2Section">
+    <div class="draft2-header"><span>📝</span><span>提交二稿 — 根据反馈修改后在此输入</span></div>
+    <div class="draft2-body">
+      <div class="input-label"><span>二稿内容</span><span id="charCount2">0 字</span></div>
+      <textarea id="essay2Input" placeholder="在此输入修改后的作文…" oninput="updateCount2()"></textarea>
+      <button class="draft2-submit" id="draft2Btn" onclick="getFeedback(2)">获取二稿反馈</button>
+    </div>
+  </div>
+
+  <!-- Draft 2 result -->
+  <div class="result-section" id="result2Section" style="margin-top:1rem;">
+    <div class="result-header">
+      <span id="modeBadge2" class="mode-badge badge-teal">🤖 AI 反馈（二稿）</span>
+      <span style="font-size:12px;color:var(--muted);margin-left:auto;" id="resultMeta2"></span>
+    </div>
+    <div class="result-content" id="resultContent2"></div>
+    <div class="score-row" id="scoreRow2"></div>
+  </div>
+
+  <!-- Comparison -->
+  <div class="comparison" id="comparison">
+    <div class="comp-box">
+      <div class="comp-title">📊 一稿 vs 二稿 · 进步对比</div>
+      <div id="compBars"></div>
+      <div class="comp-summary" id="compSummary"></div>
     </div>
   </div>
 
   <div class="footer">华文写作批改工具 · Grace Tang · 2026</div>
 </div>
 
+<!-- Camera modal -->
+<div class="modal-overlay" id="cameraModal">
+  <div class="modal-box">
+    <div class="modal-title">📷 扫描作文<button class="modal-close" onclick="closeCamera()">✕</button></div>
+    <video id="cameraVideo" autoplay playsinline style="width:100%;border-radius:12px;background:#000;display:block;"></video>
+    <canvas id="cameraCanvas" style="display:none;"></canvas>
+    <img id="cameraPreview" style="display:none;width:100%;border-radius:12px;margin-top:.8rem;" />
+    <div class="cam-btns" id="camBtns">
+      <button class="cam-btn cam-snap" onclick="snapPhoto()">📸 拍照</button>
+      <button class="cam-btn cam-cancel" onclick="closeCamera()">取消</button>
+    </div>
+    <div class="cam-loading" id="camLoading">🔍 正在识别文字，请稍候…</div>
+    <div class="cam-status" id="camStatus">正在启动摄像头…</div>
+  </div>
+</div>
+
 <script>
-// ⚠️ 完成 Cloudflare Worker 部署后，把下面这行替换成你的 Worker 网址
-const WORKER_URL = "https://YOUR_WORKER_NAME.YOUR_SUBDOMAIN.workers.dev";
+const WORKER_URL = "https://chinese-feedback-proxy.tangxiazhen94.workers.dev";
+const SESSION_ID = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
 
 const SAMPLES = [
-  `我的家庭有四个人。我的爸爸是一个医生，他每天都很忙。我的妈妈在家里工作，她很爱我。我有一个哥哥，他比我大三岁，我们经常一起玩游戏。我很爱我的家庭，我们的关系很好。周末的时候，我们一家人会去公园散步或者去餐厅吃饭。我觉得家庭是最重要的。`,
-  `环境保护是现在很重要的问题。因为人们使用太多的塑料和浪费很多水，所以环境变得很差。我们应该减少使用塑料袋，改用环保的袋子。另外，我们也要节约用水，不要开着水龙头刷牙。政府也应该制定更多的环保政策来保护我们的地球。如果每个人都做一点点，地球会变得更好。`,
-  `随着城市化的快速发展，越来越多的人选择在城市生活。城市给人们提供了更多的就业机会和方便的生活设施，但同时也带来了一些问题，比如交通堵塞、空气污染和生活节奏太快。住在城市里，虽然生活很方便，超市和医院都在附近，可是有时候会感到很孤独，邻居之间很少交流。我认为城市和农村各有优点，最重要的是找到适合自己的生活方式。`
+  `我的家庭有四个人。我的爸爸是一个医生，他每天都很忙。我的妈妈在家里工作，她很爱我。我有一个哥哥，他比我大三岁，我们经常一起玩游戏。我很爱我的家庭，我们的关系很好。周末的时候，我们一家人会去公园散步或者去餐厅吃饭。`,
+  `环境保护是现在很重要的问题。因为人们使用太多的塑料和浪费很多水，所以环境变得很差。我们应该减少使用塑料袋，改用环保的袋子。另外，我们也要节约用水，不要开着水龙头刷牙。如果每个人都做一点点，地球会变得更好。`,
+  `随着城市化的快速发展，越来越多的人选择在城市生活。城市给人们提供了更多的就业机会和方便的生活设施，但同时也带来了一些问题，比如交通堵塞、空气污染和生活节奏太快。我认为城市和农村各有优点，最重要的是找到适合自己的生活方式。`
 ];
 
 const MODES = {
-  ai: {
-    label: '🤖 AI 反馈', badge: 'badge-teal',
-    prompt: `你是一位专业的华文二语（CFL）写作批改助手。请对以下华文作文进行详细批改，提供AI直接纠错式反馈。\n\n要求：\n1. 【语法与词汇错误】：找出并直接指出所有语法错误、用词不当、标点问题，给出正确答案\n2. 【句子结构】：分析句子结构，指出改进之处并给出修改建议\n3. 【内容与逻辑】：评价文章内容组织和逻辑连贯性\n4. 【亮点】：指出文章中写得好的地方\n5. 【评分】：格式为"准确性：X分，流利度：X分，内容：X分"（满分10分）\n\n用简体中文回答，语气专业但友好。`
-  },
-  teacher: {
-    label: '👩‍🏫 教师反馈', badge: 'badge-gold',
-    prompt: `你是一位经验丰富的华文教师，用启发式、引导式的方式批改作文。\n\n要求：\n1. 【引导性提问】：不直接给答案，通过提问引导学生思考\n2. 【鼓励与肯定】：先肯定亮点，再温和指出改进之处\n3. 【举例说明】：通过举例帮助学生理解语言规律\n4. 【反思问题】：结尾给出2-3个引导自我反思的问题\n5. 【整体评价】：用描述性语言评价（不给分数）\n\n语气温和鼓励，像真实的华文老师。`
-  },
-  hybrid: {
-    label: '🤝 人机协同', badge: 'badge-purple',
-    prompt: `你是人机协同的华文写作批改系统，结合AI精确分析和教师人性化指导。\n\n**第一部分：AI精确分析**\n- 列出所有具体错误，给出正确答案\n- 量化评分：准确性：X分，流利度：X分，内容：X分（满分10分）\n\n**第二部分：教师指导建议**\n- 个性化学习建议\n- 最值得优先改进的1-2个方面\n- 1个具体的练习建议\n- 鼓励性结尾`
-  }
+  ai:      { label:'🤖 AI 反馈',  badge:'badge-teal',   prompt:`你是专业的华文二语写作批改助手。\n【语法与词汇错误】：找出所有错误并给出正确答案\n【句子结构】：指出改进之处\n【内容与逻辑】：评价文章组织\n【亮点】：指出写得好的地方\n【评分】：准确性：X分，流利度：X分，内容：X分（满分10分）\n语气专业友好。` },
+  teacher: { label:'👩‍🏫 教师反馈', badge:'badge-gold',   prompt:`你是经验丰富的华文教师，用启发式方式批改。\n【引导性提问】：通过提问引导思考，不直接给答案\n【鼓励与肯定】：先肯定亮点\n【举例说明】：通过举例帮助理解\n【反思问题】：结尾2-3个反思问题\n【整体评价】：描述性评价，不给分数\n语气温和鼓励。` },
+  hybrid:  { label:'🤝 人机协同',  badge:'badge-purple', prompt:`**第一部分：AI精确分析**\n列出所有错误及正确答案\n评分：准确性：X分，流利度：X分，内容：X分（满分10分）\n\n**第二部分：教师指导**\n个性化学习建议\n最值得优先改进的1-2方面\n1个具体练习建议\n鼓励性结尾` },
 };
 
 let currentMode = 'ai';
+let draft1Scores = null;
+let cameraStream = null;
+let capturedImage = null;
+let currentSubId = null;
 
 function setMode(m) {
   currentMode = m;
   document.querySelectorAll('.mode-tab').forEach(t => t.className = 'mode-tab');
-  const map = { ai: 'active-teal', teacher: 'active-gold', hybrid: 'active-purple' };
-  document.getElementById('tab-' + m).classList.add(map[m]);
+  ({ ai:'active-teal', teacher:'active-gold', hybrid:'active-purple' });
+  const map = { ai:'active-teal', teacher:'active-gold', hybrid:'active-purple' };
+  document.getElementById('tab-'+m).classList.add(map[m]);
 }
 function loadSample(i) { document.getElementById('essayInput').value = SAMPLES[i]; updateCount(); }
-function updateCount() { document.getElementById('charCount').textContent = document.getElementById('essayInput').value.length + ' 字'; }
-function showError(msg) { const e = document.getElementById('errorMsg'); e.textContent = msg; e.style.display = 'block'; }
-function hideError() { document.getElementById('errorMsg').style.display = 'none'; }
-function hideResult() { document.getElementById('resultSection').classList.remove('visible'); }
+function updateCount()  { document.getElementById('charCount').textContent  = document.getElementById('essayInput').value.length + ' 字'; }
+function updateCount2() { document.getElementById('charCount2').textContent = document.getElementById('essay2Input').value.length + ' 字'; }
+function showError(m)   { const e=document.getElementById('errorMsg'); e.textContent=m; e.style.display='block'; }
+function hideError()    { document.getElementById('errorMsg').style.display='none'; }
+function showDraft2()   { document.getElementById('draft2Section').classList.add('visible'); document.getElementById('draft2Section').scrollIntoView({behavior:'smooth'}); }
 
 function renderMarkdown(text) {
   return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/【(.+?)】/g, '<h3>【$1】</h3>')
-    .replace(/^(\d+)\.\s/gm, '<br><strong>$1.</strong> ')
-    .replace(/「(.+?)」/g, '<span class="error-highlight">$1</span>')
-    .replace(/→\s*(.+?)$/gm, '<div class="suggestion">→ $1</div>')
-    .replace(/✓\s*(.+?)$/gm, '<div class="praise">✓ $1</div>')
-    .replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/【(.+?)】/g,'<h3>【$1】</h3>')
+    .replace(/「(.+?)」/g,'<span class="error-highlight">$1</span>')
+    .replace(/→\s*(.+?)$/gm,'<div class="suggestion">→ $1</div>')
+    .replace(/✓\s*(.+?)$/gm,'<div class="praise">✓ $1</div>')
+    .replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
 }
 
 function parseScores(text) {
-  const s1 = text.match(/准确性[：:]\s*(\d+)/);
-  const s2 = text.match(/流利度[：:]\s*(\d+)/);
-  const s3 = text.match(/内容[：:]\s*(\d+)/);
-  if (!s1 && !s2 && !s3) return null;
-  return [
-    { label: '准确性', val: s1 ? s1[1] : '—' },
-    { label: '流利度', val: s2 ? s2[1] : '—' },
-    { label: '内容',   val: s3 ? s3[1] : '—' }
-  ];
+  const s1=text.match(/准确性[：:]\s*(\d+)/); const s2=text.match(/流利度[：:]\s*(\d+)/); const s3=text.match(/内容[：:]\s*(\d+)/);
+  if(!s1&&!s2&&!s3) return null;
+  return [{label:'准确性',val:s1?+s1[1]:0},{label:'流利度',val:s2?+s2[1]:0},{label:'内容',val:s3?+s3[1]:0}];
 }
 
-async function getFeedback() {
-  const essay = document.getElementById('essayInput').value.trim();
-  if (!essay)            { showError('请先输入华文作文内容。'); return; }
-  if (essay.length < 20) { showError('作文太短，请输入至少 20 个字。'); return; }
+async function getFeedback(draft) {
+  const essay = draft===1 ? document.getElementById('essayInput').value.trim() : document.getElementById('essay2Input').value.trim();
+  const studentName = document.getElementById('studentName').value.trim();
+  if (!studentName) { showError('请先填写姓名或学号。'); return; }
+  if (!essay)       { showError('请先输入作文内容。'); return; }
+  if (essay.length < 20) { showError('作文太短，请输入至少20个字。'); return; }
+  hideError();
 
-  hideError(); hideResult();
-  document.getElementById('submitBtn').disabled = true;
-  document.getElementById('btnText').textContent = '批改中…';
-  document.getElementById('loading').classList.add('visible');
+  const loadingEl = document.getElementById('loading');
+  const btnEl     = document.getElementById(draft===1?'submitBtn':'draft2Btn');
+  const btnTextEl = document.getElementById(draft===1?'btnText':null);
+  loadingEl.classList.add('visible');
+  btnEl.disabled = true;
+  if (btnTextEl) btnTextEl.textContent = '批改中…';
+
+  const msgs = ['正在仔细阅读作文…','分析语法与用词…','整理批改意见…','即将完成…'];
+  let li=0;
+  const t = setInterval(()=>{ document.getElementById('loadingText').textContent=msgs[li++%msgs.length]; },1800);
 
   const mode = MODES[currentMode];
-  const msgs = ['正在仔细阅读作文…', '分析语法与用词…', '整理批改意见…', '即将完成…'];
-  let li = 0;
-  const t = setInterval(() => { document.getElementById('loadingText').textContent = msgs[li++ % msgs.length]; }, 1800);
-
   try {
     const res = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        model:'claude-sonnet-4-20250514', max_tokens:1000,
         system: mode.prompt,
-        messages: [{ role: 'user', content: `请批改以下华文作文：\n\n${essay}` }]
+        messages:[{role:'user',content:`请批改以下华文作文：\n\n${essay}`}],
+        logData:{ sessionId:SESSION_ID, studentName, draft, mode:currentMode, essay }
       })
     });
-
     clearInterval(t);
     const data = await res.json();
-    if (data.error) throw new Error(data.error.message || '未知错误');
-
-    const feedback = data.content?.[0]?.text || '抱歉，未能获取反馈，请重试。';
-    document.getElementById('loading').classList.remove('visible');
-
-    const badge = document.getElementById('modeBadge');
-    badge.textContent = mode.label;
-    badge.className = 'mode-badge ' + mode.badge;
-    document.getElementById('resultMeta').textContent = `共 ${essay.length} 字`;
-    document.getElementById('resultContent').innerHTML = '<p>' + renderMarkdown(feedback) + '</p>';
+    if (data.error) throw new Error(data.error.message);
+    const feedback = data.content?.[0]?.text || '抱歉，请重试。';
+    loadingEl.classList.remove('visible');
 
     const scores = parseScores(feedback);
-    document.getElementById('scoreRow').innerHTML = scores ? scores.map(s => `
-      <div class="score-chip">
-        <div class="score-label">${s.label}</div>
-        <div class="score-val">${s.val}<span style="font-size:13px;font-weight:400;">/10</span></div>
-      </div>`).join('') : '';
-
-    document.getElementById('resultSection').classList.add('visible');
-    document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } catch (err) {
+    if (draft===1) {
+      draft1Scores = scores;
+      const badge = document.getElementById('modeBadge');
+      badge.textContent = mode.label; badge.className = 'mode-badge ' + mode.badge;
+      document.getElementById('resultMeta').textContent = `共${essay.length}字`;
+      document.getElementById('resultContent').innerHTML = '<p>'+renderMarkdown(feedback)+'</p>';
+      document.getElementById('scoreRow').innerHTML = scores
+        ? scores.map(s=>`<div class="score-chip"><div class="score-label">${s.label}</div><div class="score-val">${s.val}<span style="font-size:13px;font-weight:400;">/10</span></div></div>`).join('') : '';
+      document.getElementById('resultSection').classList.add('visible');
+      document.getElementById('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+    } else {
+      const badge2 = document.getElementById('modeBadge2');
+      badge2.textContent = mode.label+'（二稿）'; badge2.className = 'mode-badge '+mode.badge;
+      document.getElementById('resultMeta2').textContent = `共${essay.length}字`;
+      document.getElementById('resultContent2').innerHTML = '<p>'+renderMarkdown(feedback)+'</p>';
+      document.getElementById('scoreRow2').innerHTML = scores
+        ? scores.map(s=>`<div class="score-chip"><div class="score-label">${s.label}</div><div class="score-val">${s.val}<span style="font-size:13px;font-weight:400;">/10</span></div></div>`).join('') : '';
+      document.getElementById('result2Section').classList.add('visible');
+      if (draft1Scores && scores) showComparison(draft1Scores, scores);
+      document.getElementById('result2Section').scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  } catch(err) {
     clearInterval(t);
-    document.getElementById('loading').classList.remove('visible');
-    showError('错误：' + err.message);
+    loadingEl.classList.remove('visible');
+    showError('错误：'+err.message);
   }
+  btnEl.disabled = false;
+  if (btnTextEl) btnTextEl.textContent = '获取反馈';
+}
 
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('btnText').textContent = '获取反馈';
+function showComparison(s1, s2) {
+  const labels = ['准确性','流利度','内容'];
+  const bars = labels.map((l,i) => {
+    const v1=s1[i]?.val||0, v2=s2[i]?.val||0;
+    const diff=v2-v1;
+    const dc = diff>0?'delta-up':diff<0?'delta-down':'delta-same';
+    const da = diff>0?`↑${diff}`:diff<0?`↓${Math.abs(diff)}`:'→';
+    return `<div class="comp-row">
+      <div class="comp-label">${l}</div>
+      <div class="comp-bars">
+        <div class="bar-wrap"><div class="bar-tag">一</div><div class="bar-bg"><div class="bar-fill b1" style="width:${v1/10*100}%"></div></div><div class="bar-num">${v1}</div></div>
+        <div class="bar-wrap"><div class="bar-tag">二</div><div class="bar-bg"><div class="bar-fill b2" style="width:${v2/10*100}%"></div></div><div class="bar-num">${v2}</div></div>
+      </div>
+      <span class="comp-delta ${dc}">${da}</span>
+    </div>`;
+  }).join('');
+  const total1=s1.reduce((a,s)=>a+s.val,0), total2=s2.reduce((a,s)=>a+s.val,0), diff=total2-total1;
+  const summary = diff>0 ? `🎉 总分提升 ${diff} 分！从 ${total1}/30 → ${total2}/30，修改很有成效！`
+    : diff===0 ? `总分保持 ${total1}/30，继续努力！`
+    : `总分从 ${total1}/30 → ${total2}/30，还有提升空间，加油！`;
+  document.getElementById('compBars').innerHTML = bars;
+  document.getElementById('compSummary').textContent = summary;
+  document.getElementById('comparison').classList.add('visible');
+}
+
+// Check teacher feedback
+async function checkTeacherFeedback() {
+  const studentName = document.getElementById('studentName').value.trim();
+  if (!studentName) { alert('请先填写姓名。'); return; }
+  try {
+    const res = await fetch(`${WORKER_URL}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'getTeacherFeedback', sessionId: SESSION_ID })
+    });
+    const data = await res.json();
+    if (data.annotations && data.annotations.length > 0) {
+      const body = document.getElementById('teacherBody');
+      body.innerHTML = data.annotations.map(a => `
+        <div class="anno-item">
+          <span class="anno-tag tag-${a.type}">${a.type}</span><br>${a.text}
+        </div>`).join('');
+      document.getElementById('teacherSection').classList.add('visible');
+      document.getElementById('teacherSection').scrollIntoView({behavior:'smooth'});
+    } else {
+      alert('老师还未批注，请稍后再查看。');
+    }
+  } catch(e) { alert('查询失败，请稍后重试。'); }
+}
+
+function copyResult(id) {
+  navigator.clipboard.writeText(document.getElementById(id).innerText).then(()=>alert('已复制！'));
 }
 
 function clearAll() {
-  document.getElementById('essayInput').value = '';
-  updateCount(); hideError(); hideResult();
+  document.getElementById('essayInput').value='';
+  updateCount(); hideError();
+  ['resultSection','result2Section','draft2Section','comparison','teacherSection'].forEach(id=>{
+    document.getElementById(id).classList.remove('visible');
+  });
   document.getElementById('loading').classList.remove('visible');
+  draft1Scores=null;
 }
 
-function copyResult() {
-  navigator.clipboard.writeText(document.getElementById('resultContent').innerText)
-    .then(() => alert('已复制到剪贴板！'));
+// ── Camera ──
+async function openCamera() {
+  document.getElementById('cameraModal').classList.add('visible');
+  document.getElementById('cameraPreview').style.display='none';
+  document.getElementById('cameraVideo').style.display='block';
+  document.getElementById('camStatus').textContent='正在启动摄像头…';
+  document.getElementById('camBtns').innerHTML=`<button class="cam-btn cam-snap" onclick="snapPhoto()">📸 拍照</button><button class="cam-btn cam-cancel" onclick="closeCamera()">取消</button>`;
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({ video:{facingMode:'environment'}, audio:false });
+    document.getElementById('cameraVideo').srcObject = cameraStream;
+    document.getElementById('camStatus').textContent='对准作文，点击拍照。';
+  } catch(e) {
+    document.getElementById('camStatus').textContent='无法启动摄像头：'+e.message;
+  }
+}
+
+function snapPhoto() {
+  const video  = document.getElementById('cameraVideo');
+  const canvas = document.getElementById('cameraCanvas');
+  canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  capturedImage = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+  document.getElementById('cameraPreview').src = 'data:image/jpeg;base64,'+capturedImage;
+  document.getElementById('cameraPreview').style.display='block';
+  document.getElementById('cameraVideo').style.display='none';
+  document.getElementById('camBtns').innerHTML=`<button class="cam-btn cam-retake" onclick="retakePhoto()">🔄 重拍</button><button class="cam-btn cam-use" onclick="usePhoto()">✓ 使用这张</button>`;
+  document.getElementById('camStatus').textContent='确认照片清晰后点「使用这张」。';
+}
+
+function retakePhoto() {
+  document.getElementById('cameraPreview').style.display='none';
+  document.getElementById('cameraVideo').style.display='block';
+  document.getElementById('camBtns').innerHTML=`<button class="cam-btn cam-snap" onclick="snapPhoto()">📸 拍照</button><button class="cam-btn cam-cancel" onclick="closeCamera()">取消</button>`;
+  capturedImage=null;
+}
+
+async function usePhoto() {
+  if (!capturedImage) return;
+  document.getElementById('camLoading').style.display='block';
+  document.getElementById('camBtns').style.display='none';
+  document.getElementById('camStatus').textContent='';
+  try {
+    const res = await fetch(WORKER_URL, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'ocr', imageData:capturedImage, mediaType:'image/jpeg' })
+    });
+    const data = await res.json();
+    closeCamera();
+    if (data.text && !data.text.includes('无法识别')) {
+      document.getElementById('essayInput').value = data.text;
+      updateCount();
+    } else {
+      alert(data.text || '识别失败，请重新拍摄。');
+    }
+  } catch(e) {
+    closeCamera();
+    alert('识别出错，请重试。');
+  }
+}
+
+function closeCamera() {
+  if (cameraStream) { cameraStream.getTracks().forEach(t=>t.stop()); cameraStream=null; }
+  document.getElementById('cameraModal').classList.remove('visible');
+  document.getElementById('camLoading').style.display='none';
+  document.getElementById('camBtns').style.display='flex';
+  capturedImage=null;
 }
 </script>
 </body>
